@@ -2,6 +2,7 @@ package com.incomex.cliente.application;
 
 import com.incomex.cliente.application.dto.in.CategoryDto;
 import com.incomex.cliente.application.dto.out.CategoryOut;
+import com.incomex.cliente.application.port.input.repository.cache.ICache;
 import com.incomex.cliente.application.port.input.repository.db.ICategoryDb;
 import com.incomex.cliente.application.port.input.service.ICategoryService;
 import com.incomex.cliente.domain.CategoryDomain;
@@ -14,6 +15,9 @@ public class CategoryService implements ICategoryService {
 
     @Autowired
     private ICategoryDb categoryDb;
+
+    @Autowired
+    private ICache<CategoryDto> categoryDtoICache;
 
     /**
      * @param categoryDto Recibe un objeto categoria. Solo es requerido el nombre. La foto se maneja como base 64.
@@ -48,12 +52,17 @@ public class CategoryService implements ICategoryService {
      */
     @Override
     public CategoryDto getById(int id) {
-        CategoryDomain categoryLocal = categoryDb.getById(id);
-        if (categoryLocal == null) {
-            throw new ApplicationException(ErrorType.INFO_CATEGORY_ID_INVALID);
-        }
+        CategoryDto categoryDto = categoryDtoICache.get(id, CategoryDto.class.getName(), CategoryDto.class);
+        if (categoryDto == null) {
+            CategoryDomain categoryLocal = categoryDb.getById(id);
+            if (categoryLocal == null) {
+                throw new ApplicationException(ErrorType.INFO_CATEGORY_ID_INVALID);
+            }
+            categoryDto = mapToCategoryDto(categoryLocal);
+            categoryDtoICache.save(id, CategoryDto.class.getName(), categoryDto);
 
-        return mapToCategoryDto(categoryLocal);
+        }
+        return categoryDto;
     }
 
     private CategoryDto mapToCategoryDto(CategoryDomain categoryLocal) {

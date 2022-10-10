@@ -6,6 +6,7 @@ import com.incomex.cliente.application.dto.out.ProductDtoOut;
 import com.incomex.cliente.application.dto.out.ProductDtoOutList;
 import com.incomex.cliente.application.dto.out.ProductOutCreate;
 import com.incomex.cliente.application.dto.out.SupplierDtoOut;
+import com.incomex.cliente.application.port.input.repository.cache.ICache;
 import com.incomex.cliente.application.port.input.repository.db.IProductDb;
 import com.incomex.cliente.application.port.input.service.ICategoryService;
 import com.incomex.cliente.application.port.input.service.IProductService;
@@ -33,6 +34,10 @@ public class ProductService implements IProductService {
 
     @Autowired
     private Settings settings;
+
+
+    @Autowired
+    private ICache<ProductDtoOutList> productDtoOutListICache;
 
     /**
      * @param productDtoIn Recibe un objeto categoria. Solo es requerido el nombre. La foto se maneja como base 64.
@@ -86,15 +91,22 @@ public class ProductService implements IProductService {
      */
     @Override
     public ProductDtoOutList getByPage(int page) {
+
         if (page < 1) {
             throw new ApplicationException(ErrorType.INFO_PRODUCT_PAGE_NO_VALID);
         }
-        int offset = (page - 1) * settings.getProductByPage();
-        List<ProductDomain> products = productDb.getByProducts(offset, settings.getProductByPage());
+        ProductDtoOutList productDtoOutList = productDtoOutListICache.get(page, ProductDtoOutList.class.getName(), ProductDtoOut.class);
+        if (productDtoOutList == null) {
+            int offset = (page - 1) * settings.getProductByPage();
+            List<ProductDomain> products = productDb.getByProducts(offset, settings.getProductByPage());
 
-        List<ProductDtoOut> productDtoOuts = products.stream().map(this::mapToProductDtoOut).collect(Collectors.toList());
+            List<ProductDtoOut> productDtoOuts = products.stream().map(this::mapToProductDtoOut).collect(Collectors.toList());
 
-        return new ProductDtoOutList(productDtoOuts, page);
+            productDtoOutList = new ProductDtoOutList(productDtoOuts, page);
+
+            productDtoOutListICache.save(page, ProductDtoOutList.class.getName(), productDtoOutList);
+        }
+        return productDtoOutList;
     }
 
 

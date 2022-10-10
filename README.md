@@ -1,24 +1,17 @@
 # Incomex Test!
 
-This is a sample API destined to be used by an hotel to manage reservation.
+Esta es una api de ejemplo en base a lo solictado
 
-These were some requirements 
-- For the purpose of the test, we assume the hotel has only one room available
-- To give a chance to everyone to book the room, the stay can’t be longer than 3 days and
-  can’t be reserved more than 30 days in advance.
-- All reservations start at least the next day of booking,
-- To simplify the use case, a “DAY’ in the hotel room starts from 00:00 to 23:59:59.
-- Every end-user can check the room availability, place a reservation, cancel it or modify it.
-- To simplify the API is insecure.
+La api tiene:
+De base SqlLite no necesita instalacion . Al iniciar automaticamente creara la bd.
+Para versionamiento db Flyway, este correra los script. Una vez corrido la primera vez no los volvera a correr. 
+Posdata si me modifica algunos de los archivos de version despues de la creacion de la bd. Habra que eliminar la bd
+Tiene implementacion con redis . Se deja desabilitado por si no tiene un Docker. para pruebas de carga se recomienda intalar un docker de redis.
+(https://hub.docker.com/_/redis)
+Se incluye configuracion de Kubernet por si se desea desplegar en la nube.
 
-To run the API you need to import the project to your favorite IDE and compile it. After that it will download all 
-the required dependencies. 
+Para la documentacion Incluye swagger.
+Url Local del proyect (http://localhost:8060/api/clientes/swagger-ui/index.html#)
 
-After, that, start the project by clicking the button run on the project.
-
-If you want to see the API documentation, 
-after starting the project go to [http://localhost:8060/api/msbooking/swagger-ui/index.html#/](http://localhost:8060/api/msbooking/swagger-ui/index.html#/)
-
-There is an in-memory database with h2. Just to keep records everytime you run the app. Bear in mind these values will be lost everytime you restart the app.
-
-To access the database console go to [http://localhost:8060/api/msbooking/h2-console/](http://localhost:8060/api/msbooking/h2-console/)
+Por falta de tiempo no realize los test, mas no estaban solicitados.
+De seguridad como tal podria manejar con autorization en la api. pero es mejor manejarlo en el api gateway de la nube con una lamnda o un llamado ms. 

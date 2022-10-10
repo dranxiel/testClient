@@ -10,4 +10,23 @@ public class Settings {
 
     @Value("${product.byPage}")
     private int productByPage;
+
+    @Value("${spring.redis.host}")
+    private String redisHost;
+
+    @Value("${spring.redis.password}")
+    private String redisPassword;
+
+    @Value("${spring.redis.timeout}")
+    private Integer redisTimeout;
+
+    @Value("${spring.redis.enable}")
+    private boolean redisEnable;
+
+    @Value("${spring.project.name}")
+    private String projectName;
+
+    @Value("${spring.redis.time}")
+    private int redisTime;
 }
+

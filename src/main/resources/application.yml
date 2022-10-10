@@ -27,3 +27,13 @@ server:
 
 product:
     byPage: 50
+
+    # Configuracion de cache de la api
+spring.redis:
+    host: localhost:6379
+    password:
+    timeout: 350
+    # Duracion del cache en minutos
+    time: 30
+    # Habilita o apaga el redis. Se deja en false por si no tuviera redis.
+    enable: false
