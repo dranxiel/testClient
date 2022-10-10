@@ -1,18 +1,15 @@
-package com.incomex.cliente.application.dto.in;
+package com.incomex.cliente.application.dto.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotEmpty;
-
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDto {
-    @NotEmpty
+@NoArgsConstructor
+public class SupplierDtoOut {
     private String name;
     private String description;
     private String pictureBase64;

@@ -24,3 +24,6 @@ server:
     port: 8060
     servlet:
         contextPath: /api/clientes
+
+product:
+    byPage: 50

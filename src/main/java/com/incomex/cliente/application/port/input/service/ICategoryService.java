@@ -7,6 +7,6 @@ public interface ICategoryService {
 
     int Create(CategoryDto categoryDto);
 
-    CategoryDomain getById(int id);
+    CategoryDto getById(int id);
 
 }

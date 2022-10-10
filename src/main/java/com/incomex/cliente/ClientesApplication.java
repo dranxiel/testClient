@@ -6,11 +6,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@OpenAPIDefinition(info = @Info(title = "Booking API", version = "1.0", description = "Booking"))
+@OpenAPIDefinition(info = @Info(title = "Clientes Api", version = "1.0", description = "Api para el manejo de los clientes"))
 public class ClientesApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ClientesApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ClientesApplication.class, args);
+    }
 
 }

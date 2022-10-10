@@ -1,5 +1,6 @@
 package com.incomex.cliente.componets.generic;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -11,13 +12,22 @@ import javax.sql.DataSource;
 @ComponentScan("com.incomex.cliente")
 public class JdcTemplateConfig {
 
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.driver-class-name}")
+    private String driver;
+    @Value("${spring.datasource.username}")
+    private String user;
+    @Value("${spring.datasource.password}")
+    private String password;
+
     @Bean
-    public DataSource mysqlDataSource() {
+    public DataSource sqliteDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.sqlite.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/springjdbc");
-        dataSource.setUsername("guest_user");
-        dataSource.setPassword("guest_password");
+        dataSource.setDriverClassName(driver);
+        dataSource.setUrl(url);
+        dataSource.setUsername(user);
+        dataSource.setPassword(password);
 
         return dataSource;
     }

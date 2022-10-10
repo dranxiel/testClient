@@ -1,6 +1,5 @@
 package com.incomex.cliente.infrastructure.controller;
 
-import com.incomex.cliente.application.ApplicationException;
 import com.incomex.cliente.application.dto.in.CategoryDto;
 import com.incomex.cliente.application.dto.out.ErrorResponse;
 import com.incomex.cliente.application.port.input.service.ICategoryService;
@@ -21,16 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class CategoryController {
 
     @Autowired
-    private ICategoryService iCategoryService;
+    private ICategoryService categoryService;
     @Operation(summary = "Crear una categoria", responses = {
             @ApiResponse(description = "Error con el nombre",
                     responseCode = "202", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(description = "Ok",
                     responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+            @ApiResponse(description = "Internal Server Error",
+                    responseCode = "500", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
     @PostMapping(value = "/")
-    public ResponseEntity<Integer> makeReservation(@RequestBody @Validated CategoryDto categoryDto) {
-        int idCategory = iCategoryService.Create(categoryDto);
+    public ResponseEntity<Integer> create(@RequestBody @Validated CategoryDto categoryDto) {
+        int idCategory = categoryService.Create(categoryDto);
         return ResponseEntity.ok(idCategory);
     }
 

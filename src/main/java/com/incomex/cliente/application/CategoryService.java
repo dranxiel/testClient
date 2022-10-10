@@ -21,9 +21,14 @@ public class CategoryService implements ICategoryService {
     public int Create(CategoryDto categoryDto) {
 
         validateName(categoryDto);
-        CategoryDomain categoryDomain = new CategoryDomain(0, categoryDto.getName(), categoryDto.getDescription(), categoryDto.getPictureBase64());
+        CategoryDomain categoryDomain = mapToCategoryDomain(categoryDto);
 
         return categoryDb.create(categoryDomain);
+    }
+
+    private CategoryDomain mapToCategoryDomain(CategoryDto categoryDto) {
+        CategoryDomain categoryDomain = new CategoryDomain(0, categoryDto.getName(), categoryDto.getDescription(), categoryDto.getPictureBase64());
+        return categoryDomain;
     }
 
     /**
@@ -38,14 +43,19 @@ public class CategoryService implements ICategoryService {
 
     /**
      * @param id recibe un id de categoria, si existe la retorna, si no retorna una excepcion
-     *           se deja abierto  el retorno para futura reutilizacion.
      */
     @Override
-    public CategoryDomain getById(int id) {
+    public CategoryDto getById(int id) {
         CategoryDomain categoryLocal = categoryDb.getById(id);
         if (categoryLocal == null) {
             throw new ApplicationException(ErrorType.INFO_CATEGORY_ID_INVALID);
         }
-        return categoryLocal;
+
+        return mapToCategoryDto(categoryLocal);
+    }
+
+    private CategoryDto mapToCategoryDto(CategoryDomain categoryLocal) {
+        return new CategoryDto(categoryLocal.getName(),
+                categoryLocal.getDescription(), categoryLocal.getPictureBase64());
     }
 }

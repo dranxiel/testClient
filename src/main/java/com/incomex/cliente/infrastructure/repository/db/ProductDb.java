@@ -41,7 +41,7 @@ public class ProductDb implements IProductDb {
             ps.setInt(6, productDomain.getUnitsInStock());
             ps.setInt(7, productDomain.getUnitsOnOrder());
             ps.setInt(8, productDomain.getReorderLevel());
-            ps.setBoolean(9, productDomain.isDiscontinued());
+            ps.setBoolean(9, productDomain.getDiscontinued());
 
             return ps;
         };
@@ -77,14 +77,15 @@ public class ProductDb implements IProductDb {
     }
 
     /**
-     * @param id busca un producto por el id si no la encuentra retorna null
+     * @param offset parametro de ini de busqueda
+     * @param fetch cantidad de registros a tomar
      * @return retorna una producto si existe, si no un null
      */
     @Override
-    public List<ProductDomain> getByProducts(int id, int offset, int fetch) {
+    public List<ProductDomain> getByProducts(int offset, int fetch) {
 
         return jdbcTemplate.query("Select ProductID, ProductName,SupplierID,CategoryID,QuantityPerUnit," +
                 "                            UnitsPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued from Products " +
-                "where ProductID=?", new BeanPropertyRowMapper<>(ProductDomain.class), id);
+                "where OFFSET ? ROWS FETCH NEXT ? ROWS ONLY", new BeanPropertyRowMapper<>(ProductDomain.class), offset,fetch);
     }
 }

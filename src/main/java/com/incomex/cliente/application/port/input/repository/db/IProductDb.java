@@ -9,7 +9,7 @@ public interface IProductDb {
 
     ProductDomain getByProductName(String productName);
 
-    List<ProductDomain> getByProducts(int id, int offset, int fetch);
+    List<ProductDomain> getByProducts(int offset, int fetch);
 
     ProductDomain getByProductID(int id);
 
