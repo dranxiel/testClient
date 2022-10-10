@@ -1,0 +1,26 @@
+spring:
+    app:
+        version: 0.0.1
+    project:
+        name: "Clientes"
+    application:
+        name: MS_CLIENTES
+    output:
+        ansi:
+            enabled: always
+
+    datasource:
+        url: jdbc:sqlite:clientes.db
+        driver-class-name: org.sqlite.JDBC
+        username: admin
+        password: admin
+    flyway:
+        enabled: true
+        baseline-on-migrate: false
+        locations:
+            - classpath:db/migration
+
+server:
+    port: 8060
+    servlet:
+        contextPath: /api/clientes

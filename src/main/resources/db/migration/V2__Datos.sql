@@ -1,0 +1,1 @@
+insert into Categories (CategoryName) values ('SERVIDORES'),('CLOUD')
