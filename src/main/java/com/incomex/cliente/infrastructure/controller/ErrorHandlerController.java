@@ -4,7 +4,6 @@ package com.incomex.cliente.infrastructure.controller;
 import com.incomex.cliente.application.ApplicationException;
 import com.incomex.cliente.application.dto.out.ErrorResponse;
 import lombok.extern.java.Log;
-import lombok.extern.log4j.Log4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

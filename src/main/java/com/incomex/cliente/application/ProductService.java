@@ -4,6 +4,7 @@ import com.incomex.cliente.application.dto.in.CategoryDto;
 import com.incomex.cliente.application.dto.in.ProductDtoIn;
 import com.incomex.cliente.application.dto.out.ProductDtoOut;
 import com.incomex.cliente.application.dto.out.ProductDtoOutList;
+import com.incomex.cliente.application.dto.out.ProductOutCreate;
 import com.incomex.cliente.application.dto.out.SupplierDtoOut;
 import com.incomex.cliente.application.port.input.repository.db.IProductDb;
 import com.incomex.cliente.application.port.input.service.ICategoryService;
@@ -37,18 +38,18 @@ public class ProductService implements IProductService {
      * @param productDtoIn Recibe un objeto categoria. Solo es requerido el nombre. La foto se maneja como base 64.
      */
     @Override
-    public int Create(ProductDtoIn productDtoIn) {
+    public ProductOutCreate Create(ProductDtoIn productDtoIn) {
 
         validateName(productDtoIn);
 
         //No se lanza asincrono por que son dos procesos. si fueran mas de 4 se podrian async.
-        categoryService.getById(productDtoIn.getCategoryID());
+        CategoryDto category = getCategoryDto(productDtoIn.getCategoryID());
 
-        supplierService.getById(productDtoIn.getSupplierID());
+        SupplierDtoOut supplier = getSupplierDtoOut(productDtoIn.getSupplierID());
 
         ProductDomain productDomain = mapProductIn(productDtoIn);
 
-        return productDb.create(productDomain);
+        return new ProductOutCreate(productDb.create(productDomain));
     }
 
 
@@ -85,8 +86,10 @@ public class ProductService implements IProductService {
      */
     @Override
     public ProductDtoOutList getByPage(int page) {
-
-        int offset = page * settings.getProductByPage();
+        if (page < 1) {
+            throw new ApplicationException(ErrorType.INFO_PRODUCT_PAGE_NO_VALID);
+        }
+        int offset = (page - 1) * settings.getProductByPage();
         List<ProductDomain> products = productDb.getByProducts(offset, settings.getProductByPage());
 
         List<ProductDtoOut> productDtoOuts = products.stream().map(this::mapToProductDtoOut).collect(Collectors.toList());
@@ -96,17 +99,29 @@ public class ProductService implements IProductService {
 
 
     private ProductDtoOut mapToProductDtoOut(ProductDomain productDomain) {
-        CategoryDto category = null;
-        SupplierDtoOut supplier = null;
-        if (productDomain.getCategoryID() != null) {
-            category = categoryService.getById(productDomain.getCategoryID());
-        }
-        if (productDomain.getSupplierID() != null) {
-            supplier = supplierService.getById(productDomain.getSupplierID());
-        }
+
+        CategoryDto category = getCategoryDto(productDomain.getCategoryID());
+
+        SupplierDtoOut supplier = getSupplierDtoOut(productDomain.getSupplierID());
 
         return new ProductDtoOut(productDomain.getId(), productDomain.getName(), supplier, category, productDomain.getQuantityPerUnit(),
                 productDomain.getUnitsPrice(), productDomain.getUnitsInStock(),
                 productDomain.getUnitsOnOrder(), productDomain.getReorderLevel(), productDomain.getDiscontinued());
+    }
+
+    private CategoryDto getCategoryDto(Integer idCategory) {
+        CategoryDto category = null;
+        if (idCategory != null) {
+            category = categoryService.getById(idCategory);
+        }
+        return category;
+    }
+
+    private SupplierDtoOut getSupplierDtoOut(Integer idSupplierId) {
+        SupplierDtoOut supplier = null;
+        if (idSupplierId != null) {
+            supplier = supplierService.getById(idSupplierId);
+        }
+        return supplier;
     }
 }

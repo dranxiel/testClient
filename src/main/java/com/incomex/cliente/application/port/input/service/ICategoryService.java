@@ -1,11 +1,11 @@
 package com.incomex.cliente.application.port.input.service;
 
 import com.incomex.cliente.application.dto.in.CategoryDto;
-import com.incomex.cliente.domain.CategoryDomain;
+import com.incomex.cliente.application.dto.out.CategoryOut;
 
 public interface ICategoryService {
 
-    int Create(CategoryDto categoryDto);
+    CategoryOut Create(CategoryDto categoryDto);
 
     CategoryDto getById(int id);
 

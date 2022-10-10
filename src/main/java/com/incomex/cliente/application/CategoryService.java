@@ -1,6 +1,7 @@
 package com.incomex.cliente.application;
 
 import com.incomex.cliente.application.dto.in.CategoryDto;
+import com.incomex.cliente.application.dto.out.CategoryOut;
 import com.incomex.cliente.application.port.input.repository.db.ICategoryDb;
 import com.incomex.cliente.application.port.input.service.ICategoryService;
 import com.incomex.cliente.domain.CategoryDomain;
@@ -16,14 +17,15 @@ public class CategoryService implements ICategoryService {
 
     /**
      * @param categoryDto Recibe un objeto categoria. Solo es requerido el nombre. La foto se maneja como base 64.
+     * @return un id de categoria en una entidad para facilitar su lectura
      */
     @Override
-    public int Create(CategoryDto categoryDto) {
+    public CategoryOut Create(CategoryDto categoryDto) {
 
         validateName(categoryDto);
         CategoryDomain categoryDomain = mapToCategoryDomain(categoryDto);
 
-        return categoryDb.create(categoryDomain);
+        return new CategoryOut(categoryDb.create(categoryDomain));
     }
 
     private CategoryDomain mapToCategoryDomain(CategoryDto categoryDto) {

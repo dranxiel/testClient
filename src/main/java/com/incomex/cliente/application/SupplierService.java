@@ -17,7 +17,6 @@ public class SupplierService implements ISupplierService {
 
     /**
      * @param id recibe un id de categoria, si existe la retorna, si no retorna una excepcion
-     *
      */
     @Override
     public SupplierDtoOut getById(int id) {
@@ -30,7 +29,8 @@ public class SupplierService implements ISupplierService {
     }
 
     private SupplierDtoOut mapToSupplierOut(SupplierDomain supplierLocal) {
-        SupplierDtoOut supplierDtoOut = new SupplierDtoOut(supplierLocal.getName(), supplierLocal.getDescription(), supplierLocal.getPictureBase64());
+        SupplierDtoOut supplierDtoOut = new SupplierDtoOut(supplierLocal.getCompanyName(), supplierLocal.getContactName(),
+                supplierLocal.getContactTitle(), supplierLocal.getAddress(), supplierLocal.getCity(), supplierLocal.getRegion(), supplierLocal.getPostalCode());
         return supplierDtoOut;
     }
 }

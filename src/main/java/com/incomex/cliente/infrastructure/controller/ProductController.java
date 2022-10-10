@@ -4,6 +4,7 @@ import com.incomex.cliente.application.dto.in.ProductDtoIn;
 import com.incomex.cliente.application.dto.out.ErrorResponse;
 import com.incomex.cliente.application.dto.out.ProductDtoOut;
 import com.incomex.cliente.application.dto.out.ProductDtoOutList;
+import com.incomex.cliente.application.dto.out.ProductOutCreate;
 import com.incomex.cliente.application.port.input.service.IProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,7 +30,7 @@ public class ProductController {
             @ApiResponse(description = "Internal Server Error",
                     responseCode = "500", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
-    @GetMapping(value = "/{page}")
+    @GetMapping(value = "page/{page}")
     public ResponseEntity<ProductDtoOutList> getReservationsByRoomId(@PathVariable int page) {
         ProductDtoOutList productDtoOutList = productService.getByPage(page);
 
@@ -55,14 +56,14 @@ public class ProductController {
             @ApiResponse(description = "Error con el nombre",
                     responseCode = "202", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(description = "Ok",
-                    responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))),
+                    responseCode = "200", content = @Content(mediaType = "application/json", schema = @Schema(implementation = ProductOutCreate.class))),
             @ApiResponse(description = "Internal Server Error",
                     responseCode = "500", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Exception.class))),
     })
     @PostMapping(value = "/")
-    public ResponseEntity<Integer> create(@RequestBody @Validated ProductDtoIn productDtoIn) {
+    public ResponseEntity<ProductOutCreate> create(@RequestBody @Validated ProductDtoIn productDtoIn) {
 
-        int idProduct = productService.Create(productDtoIn);
-        return ResponseEntity.ok(idProduct);
+        ProductOutCreate productOutCreate = productService.Create(productDtoIn);
+        return ResponseEntity.ok(productOutCreate);
     }
 }

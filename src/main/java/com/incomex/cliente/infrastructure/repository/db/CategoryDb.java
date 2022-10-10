@@ -30,10 +30,10 @@ public class CategoryDb implements ICategoryDb {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         PreparedStatementCreator psc = con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO Categories (CategoryName,Description,Picture) value ( ?,?,?)");
+                    "INSERT INTO Categories (CategoryName,Description,Picture) values ( ?,?,?)");
             ps.setString(1, category.getName());
-            ps.setString(2, category.getDescription());
-            ps.setString(3, category.getPictureBase64());
+            ps.setObject(2, category.getDescription());
+            ps.setObject(3, category.getPictureBase64());
             return ps;
         };
 
@@ -48,7 +48,7 @@ public class CategoryDb implements ICategoryDb {
     @Override
     public CategoryDomain getByName(String categoryName) {
 
-        List<CategoryDomain> query = jdbcTemplate.query("Select  CategoryID, CategoryName,Description,Picture from Categories where CategoryName=?", new BeanPropertyRowMapper<>(CategoryDomain.class), categoryName);
+        List<CategoryDomain> query = jdbcTemplate.query("Select  CategoryID as id, CategoryName as name,Description,Picture from Categories where CategoryName=?", new BeanPropertyRowMapper<>(CategoryDomain.class), categoryName);
         return query.stream().findAny().orElse(null);
     }
 
@@ -59,7 +59,7 @@ public class CategoryDb implements ICategoryDb {
     @Override
     public CategoryDomain getById(int id) {
 
-        List<CategoryDomain> query = jdbcTemplate.query("Select  CategoryID, CategoryName,Description,Picture from Categories where CategoryID=?", new BeanPropertyRowMapper<>(CategoryDomain.class), id);
+        List<CategoryDomain> query = jdbcTemplate.query("Select  CategoryID as id, CategoryName as name,Description,Picture from Categories where CategoryID=?", new BeanPropertyRowMapper<>(CategoryDomain.class), id);
         return query.stream().findAny().orElse(null);
     }
 }

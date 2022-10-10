@@ -32,16 +32,16 @@ public class ProductDb implements IProductDb {
             PreparedStatement ps = con.prepareStatement(
                     "INSERT INTO Products (ProductName,SupplierID,CategoryID,QuantityPerUnit," +
                             "UnitsPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued)" +
-                            " value ( ?,?,?,?,?,?,?,?,?)");
+                            " values ( ?,?,?,?,?,?,?,?,?)");
             ps.setString(1, productDomain.getName());
-            ps.setInt(2, productDomain.getSupplierID());
-            ps.setInt(3, productDomain.getCategoryID());
-            ps.setInt(4, productDomain.getQuantityPerUnit());
-            ps.setDouble(5, productDomain.getUnitsPrice());
-            ps.setInt(6, productDomain.getUnitsInStock());
-            ps.setInt(7, productDomain.getUnitsOnOrder());
-            ps.setInt(8, productDomain.getReorderLevel());
-            ps.setBoolean(9, productDomain.getDiscontinued());
+            ps.setObject(2, productDomain.getSupplierID());
+            ps.setObject(3, productDomain.getCategoryID());
+            ps.setObject(4, productDomain.getQuantityPerUnit());
+            ps.setObject(5, productDomain.getUnitsPrice());
+            ps.setObject(6, productDomain.getUnitsInStock());
+            ps.setObject(7, productDomain.getUnitsOnOrder());
+            ps.setObject(8, productDomain.getReorderLevel());
+            ps.setObject(9, productDomain.getDiscontinued());
 
             return ps;
         };
@@ -57,9 +57,9 @@ public class ProductDb implements IProductDb {
     @Override
     public ProductDomain getByProductName(String productName) {
 
-        List<ProductDomain> query = jdbcTemplate.query("Select ProductID, ProductName,SupplierID,CategoryID,QuantityPerUnit," +
+        List<ProductDomain> query = jdbcTemplate.query("Select ProductID as id, ProductName as name,SupplierID,CategoryID,QuantityPerUnit," +
                 "                            UnitsPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued from Products " +
-                "where CategoryName=?", new BeanPropertyRowMapper<>(ProductDomain.class), productName);
+                "where ProductName=?", new BeanPropertyRowMapper<>(ProductDomain.class), productName);
         return query.stream().findAny().orElse(null);
     }
 
@@ -70,7 +70,7 @@ public class ProductDb implements IProductDb {
     @Override
     public ProductDomain getByProductID(int id) {
 
-        List<ProductDomain> query = jdbcTemplate.query("Select ProductID, ProductName,SupplierID,CategoryID,QuantityPerUnit," +
+        List<ProductDomain> query = jdbcTemplate.query("Select ProductID as id, ProductName as name,SupplierID,CategoryID,QuantityPerUnit," +
                 "                            UnitsPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued from Products " +
                 "where ProductID=?", new BeanPropertyRowMapper<>(ProductDomain.class), id);
         return query.stream().findAny().orElse(null);
@@ -78,14 +78,14 @@ public class ProductDb implements IProductDb {
 
     /**
      * @param offset parametro de ini de busqueda
-     * @param fetch cantidad de registros a tomar
+     * @param limit  cantidad de registros a tomar
      * @return retorna una producto si existe, si no un null
      */
     @Override
-    public List<ProductDomain> getByProducts(int offset, int fetch) {
+    public List<ProductDomain> getByProducts(int offset, int limit) {
 
-        return jdbcTemplate.query("Select ProductID, ProductName,SupplierID,CategoryID,QuantityPerUnit," +
-                "                            UnitsPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued from Products " +
-                "where OFFSET ? ROWS FETCH NEXT ? ROWS ONLY", new BeanPropertyRowMapper<>(ProductDomain.class), offset,fetch);
+        return jdbcTemplate.query("Select ProductID as id, ProductName as name,SupplierID,CategoryID,QuantityPerUnit," +
+                " UnitsPrice,UnitsInStock,UnitsOnOrder,ReorderLevel,Discontinued from Products " +
+                "limit ? offset ?", new BeanPropertyRowMapper<>(ProductDomain.class), limit, offset);
     }
 }

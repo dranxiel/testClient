@@ -22,7 +22,7 @@ public class SupplierDb implements ISupplierDb {
     public SupplierDomain getById(int id) {
 
         List<SupplierDomain> query = jdbcTemplate.query(
-                "Select SupplierID, CompanyName, ContactName,ContactTitle,Address,City,Region,PostalCode," +
+                "Select SupplierID as id, CompanyName as name, ContactName,ContactTitle,Address,City,Region,PostalCode," +
                         "Country,Phone,Fax,HomePage" +
                         " from Suppliers where SupplierID=?",
                 new BeanPropertyRowMapper<>(SupplierDomain.class), id);
